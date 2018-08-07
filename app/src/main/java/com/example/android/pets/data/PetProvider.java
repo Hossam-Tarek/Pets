@@ -100,6 +100,21 @@ public class PetProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertPet(Uri uri, ContentValues values) {
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+
+        Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        if (gender == null || !PetEntry.isValidGender(gender)) {
+            throw new IllegalArgumentException("Pet requires a gender");
+        }
+
+        Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet weight must be a non negative value");
+        }
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         long id = database.insert(PetEntry.TABLE_NAME, null, values);
 
