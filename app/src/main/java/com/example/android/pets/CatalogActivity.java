@@ -25,9 +25,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.pets.data.PetCursorAdapter;
 import com.example.android.pets.data.PetDbHelper;
 import com.example.android.pets.data.PetContract.PetEntry;
 
@@ -123,36 +125,8 @@ public class CatalogActivity extends AppCompatActivity {
                 null
         );
 
-        try {
-            TextView displayView = (TextView) findViewById(R.id.text_view_pet);
-            displayView.setText("Number of rows in pets database table: " + cursor.getCount() + " pets.\n\n");
-            displayView.append(
-                    PetEntry._ID + "-" +
-                    PetEntry.COLUMN_PET_NAME + "-" +
-                    PetEntry.COLUMN_PET_BREED + "-" +
-                    PetEntry.COLUMN_PET_GENDER + "-" +
-                    PetEntry.COLUMN_PET_WEIGHT + "\n"
-            );
-
-            int idColumnIndex = cursor.getColumnIndex(PetEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
-
-            while (cursor.moveToNext()) {
-                displayView.append(
-                        "\n" + cursor.getInt(idColumnIndex) + "-" +
-                        cursor.getString(nameColumnIndex) + "-" +
-                        cursor.getString(breedColumnIndex) + "-" +
-                        cursor.getInt(genderColumnIndex) + "-" +
-                        cursor.getInt(weightColumnIndex)
-                );
-            }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
+        PetCursorAdapter cursorAdapter = new PetCursorAdapter(this, cursor);
+        ListView listView = findViewById(R.id.pets_list);
+        listView.setAdapter(cursorAdapter);
     }
 }
