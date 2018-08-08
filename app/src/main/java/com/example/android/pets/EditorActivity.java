@@ -95,6 +95,7 @@ public class EditorActivity extends AppCompatActivity
         } else {
             mEditorMode = SAVE_MODE;
             setTitle(getString(R.string.editor_activity_title_new_pet));
+            invalidateOptionsMenu();
         }
 
         // Find all relevant views that we will need to read user input from
@@ -153,6 +154,17 @@ public class EditorActivity extends AppCompatActivity
 
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new pet, hide the "Delete" menu item.
+        if (mEditorMode == SAVE_MODE) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
     }
 
     private void savePet() {
