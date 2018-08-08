@@ -97,14 +97,24 @@ public class EditorActivity extends AppCompatActivity
     }
 
     private void savePet() {
-        String name = mNameEditText.getText().toString().trim();
-        String breed = mBreedEditText.getText().toString().trim();
-        int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        String nameString = mNameEditText.getText().toString().trim();
+        String breedString = mBreedEditText.getText().toString().trim();
+        String weightString = mWeightEditText.getText().toString().trim();
+
+        if (mPetUri == null && TextUtils.isEmpty(nameString) && TextUtils.isEmpty(breedString) &&
+                TextUtils.isEmpty(weightString) && mGender == PetEntry.GENDER_UNKNOWN) {
+            return;
+        }
 
         ContentValues values = new ContentValues();
-        values.put(PetEntry.COLUMN_PET_NAME, name);
-        values.put(PetEntry.COLUMN_PET_BREED, breed);
+        values.put(PetEntry.COLUMN_PET_NAME, nameString);
+        values.put(PetEntry.COLUMN_PET_BREED, breedString);
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
+
+        int weight = 0;
+        if (!TextUtils.isEmpty(weightString)) {
+            weight = Integer.parseInt(weightString);
+        }
         values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
 
         switch (mEditorMode) {
